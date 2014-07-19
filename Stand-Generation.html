@@ -1,0 +1,64 @@
+<!--Stand Generator versions 1.01
+	1.  Made the ability a link since it was a pain for people to create the url themselves, and a pop-up window is annoying.
+	2.  Made it one button to generate name and stats because there was no need to have two buttons.
+	3.  Someone mentioned that the background music couldn't be turned off.  I allow that now as it can be perceived as annoying.
+	4.  Made all of the things in the textarea reddit formatable so the user only has to copy and paste links.
+	
+	I really wish I could make so that the generate could get the ability and the song name, but I'm unsure of how to do that with current resources.
+	
+	-->
+
+<html>
+<body>
+
+<title>Stand Generator</title><h1>Stand Generator Act 2!</h1>
+
+<script>
+function Dio(id){
+<!--Generating the name of a Stand.  Also, this if loop below serves as an easter egg, nothing more.
+var some = document.getElementById('your1').value
+if(some == 'Dio' || some == 'dio' || some == 'DIO')
+{
+	document.write('<object height="1" width="1" data="KONO DIO DA.mp3"></object><center><img src="http://37.media.tumblr.com/ebc7bc8c79dd16ad1d13000e471ff957/tumblr_mrr055kqmG1r8v9vso1_1280.jpg" alt="DIO!!!!!!" height="500" width="650"> <br /><br /><h1>You thought you were going to break this webpage, but it was I, Dio!!!!</h1></center>')
+}
+var me = Math.floor((Math.random() * some) + 1)
+
+document.getElementById('your2').value = me
+
+<!--Generation of a Stand's stats
+<!--An Array of Stat values
+var Stats = ["A", "B", "C", "D", "E"];
+var power = Math.floor((Math.random() * 4) + 0)
+var speed = Math.floor((Math.random() * 4) + 0)
+var range = Math.floor((Math.random() * 4) + 0)
+var durability = Math.floor((Math.random() * 4) + 0)
+var precision = Math.floor((Math.random() * 4) + 0)
+var potential = Math.floor((Math.random() * 4) + 0)
+
+
+document.getElementById('myTextarea').value = 'Stand Name: \n\nStand Ability: [Enter Ability Here](Enter link here) \n\nPower - ' + Stats[power] + '\n\nSpeed - ' + Stats[speed] + '\n\nRange - ' + Stats[range] + '\n\nDurability - ' + Stats[durability] + '\n\nPrecision - ' + Stats[precision] + '\n\nPotential - ' + Stats[potential];
+}
+</script>
+This website's sole purpose is to help you create a stand ability.  This website is primarily used for the "Stardust Crusaders" subreddit on reddit.com.  
+<br />The way this works is you get a random ability for your stand from the link below, and then you enter the length of any album from any genre, whether you like it or not, for the name.  
+<br />After you click the button, you will get your stats ranking from A to E in a format that is easy to copy and paste into a reddit comment box.
+<br />
+<br /> 
+<a href="http://powerlisting.wikia.com/wiki/Special:Random">Click the link for your Stand ability.</a>
+<br />
+<br />
+Enter the number of songs in the artist's album: <input type="text" id="your1" value="" size="40">
+<p>
+The name of your stand is the <input type="text" id="your2" value="" size="4"> song on the album
+<br /><br />
+<input type="button" value="Generate Your Stand"
+onclick="Dio('your2')">
+<br /><br />
+<textarea id = "myTextarea" rows="20" cols = "40"></textarea>
+<br /><br />
+<p><b><font size="20">Now go forth and Stand Proud!</font></b></p>
+<object height="90" width="150" data="JoJo no Kimyou na BoukenJoJo's Bizarre Adventure - Opening 1 Phantom Blood [1080p].mp3"></object>
+ <!--As of 12:52 AM...WRRRRRRRRRRRRRRRRRRRRRRRRYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY!!!!!!-->
+
+</body>
+</html>
