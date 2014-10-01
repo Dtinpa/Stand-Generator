@@ -1,36 +1,29 @@
 <!--Stand Generator versions 1.36
 	
-	Copyright (c) 2014 Dana Fenton Thompson
+	Copyright (c) 2014, Dana Fenton Thompson
 	
-	Author: Dana Fenton Thompson
 	Email: dft29@drexel.edu
+	Author: Dana Fenton Thompson
 	
-	Act 2 Changes:
-	1.  Made the ability a link since it was a pain for people to create the url themselves, and a pop-up window is annoying.
-	2.  Made it one button to generate name and stats because there was no need to have two buttons.
-	3.  Someone mentioned that the background music couldn't be turned off.  I allow that now as it can be perceived as annoying.
-	4.  Made all of the things in the textarea reddit format-able so the user only has to copy and paste links.
+	This is an older version of the home page.  This page was created in-case Whatever-Origin goes down.  That way, people can still make a stand.
 	
-	Act 3&4 Changes:
-	1.  Allows the user to search the Itunes database for an album.  It then extracts all of the song names and picks one at random as the stand's name.
-	2.  Put in a field for the user to enter the name of their ability, in order to generate a link to that ability.
-	3.  Trims extra spaces from the ability and makes sure that only the first letter of every word is capitalized
-
-	Act 5 Changes
-	1.  Added and extra text field so the user can check that the name that is chosen is correct.
-	2.  Added a separate button to generate the rest of the stand incase the user finds that the name is wrong.
-	3.  Added in an exception for the word "DNA" since it is in all caps and the trim() function would make it "Dna".  It broke the url.
+	Changes:
+	1. Implemented the Itunes search functionality
+	2. Got CSS up so the site doesn't look too bad
 	
 -->
 
 <html>
 	<head>
-		<title>Stand Generator</title><h1>Stand Generator Act 3!</h1>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<title>JoJo's Bizarre Stand Generator</title>
+	<meta name="keywords" content="" />
+	<meta name="description" content="" />
 		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script> 
 		
 		<script type="text/javascript">
 		//Kept as a Global variable so different functions have access to the same index value, name, and ability value
-			var index = 0;
+			var index;
 			var Name = [];
 			var ability = '';
 			
@@ -69,16 +62,24 @@
 			function handleTunesSearchResults(arg) 
 			{
 				var results = arg.results;
+				//Deletes all entries in the array just to make sure that no entries are leftover.  I think that was an issue.
+				Name = []
 				var html = '';
 				for (var i = 0; i < results.length; i++) 
 				{
 					var item = results[i];
-					var obj = 
+					var obj =
 					{
 						source: 0,
 						track_name: item.trackCensoredName,
 					};
 					Name[i] = obj.track_name;
+					
+					//gets rid of useless descriptions in parenthesis
+					if(Name[i].indexOf("(") != -1)
+					{
+						Name[i] = Name[i].substr(0,Name[i].indexOf("("))
+					}
 				}
 				
 				index = Math.floor((Math.random() * (Name.length - 1)) + 0);
@@ -86,7 +87,7 @@
 				{
 					index = Math.floor((Math.random() * (Name.length - 1)) + 0);
 				}
-				document.getElementById('Name').value = Name[index];	
+				document.getElementById('Name').value = Name[index];
 			}
 			
 			//Formats the name of the ability in order to use it to create the url
@@ -104,12 +105,6 @@
 				//Creates and formats the url for the ability
 				var url = 'http://powerlisting.wikia.com/wiki/'
 				ability = toTitleCase();
-				
-				//Easter egg won't work now idk why :(
-				if(ability == "Dio" || ability == "dio" || ability == "DIO")
-				{
-					document.write('<object height="1" width="1" data="KONO DIO DA.mp3"></object><center><img src="http://37.media.tumblr.com/ebc7bc8c79dd16ad1d13000e471ff957/tumblr_mrr055kqmG1r8v9vso1_1280.jpg" alt="DIO!!!!!!" height="500" width="650"> <br /><br /><h1>You thought you were going to break this webpage, but it was I, Dio!!!!</h1></center>')
-				}
 				
 				//If the word "DNA" is apart of the ability, it would have been reduced to "Dna" thanks to the toTitleCase().  This if loop reverses that effect. 
 				if(ability.charAt(0) == "D" && ability.charAt(1) == "n" && ability.charAt(2) == "a")
@@ -142,21 +137,38 @@
 	</head>
 
 	<body>
-		This website's sole purpose is to help you create a stand ability.  This website is primarily used for the "Stardust Crusaders" subreddit on reddit.com.  
-		<br />The way this works is:
+		<link href="styles.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="header">
+	<h1><font color="#000000">Stand Generator</font></h1>
+</div>
+<div id="menu">
+	<ul>
+		<li><a href="http://www.pages.drexel.edu/~dft29/Stand_Generator/Stand-Generation-Overdrive.html">Stand Generator</a></li>
+		<li><a href="http://www.pages.drexel.edu/~dft29/Stand_Generator/Stand-Generation-Purpose.html">Purpose</a></li>
+		<li><a href="http://www.pages.drexel.edu/~dft29/Stand_Generator/Stand-Generation.html">Old version</a></li>
+	</ul>
+</div>
+<div id="content">
+	<div id="left">
+		The way this works is:
 		<ol>
-		<li>You are given a random ability for your Stand by clicking the link below.  Enter that ability name in the first textbox.</li>
+		<li>Click the link, and, In the first text box, copy and paste the name of the ability from the that page into it</li>
 		<li>In the second textbox, enter the name of an artist and the name of one of their albums to generate a name.</li>
 		<li>Click the button titled "Generate Name" to generate the name of your stand.</li>
-		<li>The third textbox is there for you to check if the name is correct.  <b>You cannot skip this process.</b></li>
+		<li>The second textbox is there for you to check if the name is correct.  <b>You cannot skip this process.</b></li>
 		<li>Click the button called "Generate Stand" to generate the Stand's name, ability, and stats in a format suited for the reddit comment box.</li>
 		</ol>
 		Stats rank from A to E; A being the best and E being the worst.
 		<br />
+		<br />
+		My Twitter: @dio-volo
+		<br />
 		<br /> 
 		<a target="_blank" href="http://powerlisting.wikia.com/wiki/Special:Random">Click the link for your Stand ability.</a>
 		<br />
-		Enter the name of your ability in this box (e.g. Power Randomization):
+		Enter the name of your ability in this box (e.g. Beam Blade Emission):
 		<br />
 		<input type="text" id="Ability" size="52"/>
 		<br />
@@ -177,7 +189,10 @@
 		<br />
 		<br />
 		<textarea id = "Stand" rows="20" cols = "40"></textarea>
-		<p><b><font size="20">Now go forth and Stand Proud!</font></b></p>
-		<object height="90" width="150" data="JoJo no Kimyou na BoukenJoJo's Bizarre Adventure - Opening 1 Phantom Blood [1080p].mp3"></object>
+		<br />
+		<br />
+		<b><font size="6.5">Now go forth and Stand Proud!</font></b>
 	</body>
+	<div />
+	<div />
 </html>
