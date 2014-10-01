@@ -1,43 +1,32 @@
-<!--Stand Generator versions 1.51
+<!--Stand Generator versions 2.00
 	
-	Copyright (c) 2014 Dana Fenton Thompson
+	Copyright (c) 2014, Dana Fenton Thompson
 	
-	Author: Dana Fenton Thompson
 	Email: dft29@drexel.edu
+	Author: Dana Fenton Thompson
 	
-	Act 2 Changes:
-	1.  Made the ability a link since it was a pain for people to create the url themselves, and a pop-up window is annoying.
-	2.  Made it one button to generate name and stats because there was no need to have two buttons.
-	3.  Someone mentioned that the background music couldn't be turned off.  I allow that now as it can be perceived as annoying.
-	4.  Made all of the things in the textarea reddit format-able so the user only has to copy and paste links.
-	
-	Act 3&4 Changes:
-	1.  Allows the user to search the Itunes database for an album.  It then extracts all of the song names and picks one at random as the stand's name.
-	2.  Put in a field for the user to enter the name of their ability, in order to generate a link to that ability.
-	3.  Trims extra spaces from the ability and makes sure that only the first letter of every word is capitalized
-
-	Act 5 Changes
-	1.  Added and extra text field so the user can check that the name that is chosen is correct.
-	2.  Added a separate button to generate the rest of the stand incase the user finds that the name is wrong.
-	3.  Added in an exception for the word "DNA" since it is in all caps and the trim() function would make it "Dna".  It broke the url.
-	
-	Act 6 Changes
-	1.  Implemented a way to bypass the Same-Origin Policy of the internet to retrieve information from the ability website.
-	2.  Got rid of the textbox for the ability for the reason listed above.
+	Changes:
+	1. Implemented the Itunes search functionality
+	2. Got around the Same-Origin Access policy using Whatever-Origin
+	3. Got CSS up so the site doesn't look too bad
 	
 -->
 
+
 <html>
-	<head>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	<!--<link rel="stylesheet" type="text/css" href="JoJo-Style-Sheet.css">-->
-		<title>JoJo's Bizarre Stand Generator</title><h1>Stand Generator Act 3!</h1>
-		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script> 
+
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<title>JoJo's Bizarre Stand Generator</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script> 
 		
 		<script type="text/javascript">
-		//Kept as a Global variable so different functions have access to the same index value, name, and ability value
-			var index = 0;
+		//Kept as a global variable because I don't want people entering things into the text box and having that appear as the name.  Index is kept global for the same reason.
 			var Name = [];
+			var index;
 			
 			//Formats the users request to suite a url
 			function urlEncode(obj) 
@@ -74,16 +63,24 @@
 			function handleTunesSearchResults(arg) 
 			{
 				var results = arg.results;
+				//Deletes all entries in the array just to make sure that no entries are leftover.  I think that was an issue.
+				Name = []
 				var html = '';
 				for (var i = 0; i < results.length; i++) 
 				{
 					var item = results[i];
-					var obj = 
+					var obj =
 					{
 						source: 0,
 						track_name: item.trackCensoredName,
 					};
-					Name[i] = obj.track_name;
+					Name[i] = obj.track_name;	
+					
+					//gets rid of useless descriptions in parenthesis
+					if(Name[i].indexOf("(") != -1)
+					{
+						Name[i] = Name[i].substr(0,Name[i].indexOf("("))
+					}
 				}
 				
 				index = Math.floor((Math.random() * (Name.length - 1)) + 0);
@@ -91,21 +88,14 @@
 				{
 					index = Math.floor((Math.random() * (Name.length - 1)) + 0);
 				}
-				document.getElementById('Name').value = Name[index];	
+				document.getElementById('Name').value = Name[index];
 			}
 			
 			//Combines the information given by the user to create a Stand.
 			function Dio() 
 			{
 				//Creates and formats the url for the ability
-				var url = 'http://powerlisting.wikia.com/wiki/'
-				
-				//Easter egg won't work now idk why :(
-				//if(ability == "Dio" || ability == "dio" || ability == "DIO")
-				//{
-				//	document.write('<object height="1" width="1" data="KONO DIO DA.mp3"></object><center><img src="http://37.media.tumblr.com/ebc7bc8c79dd16ad1d13000e471ff957/tumblr_mrr055kqmG1r8v9vso1_1280.jpg" alt="DIO!!!!!!" height="500" width="650"> <br /><br /><h1>You thought you were going to break this webpage, but it was I, Dio!!!!</h1></center>')
-				//}
-				
+				var url = 'http://powerlisting.wikia.com/wiki/'				
 				
 				<!--Generation of a Stand's stats
 				<!--An Array of Stat values
@@ -122,7 +112,7 @@
 				
 				$.getJSON('http://whateverorigin.org/get?url=' + encodeURIComponent('http://powerlisting.wikia.com/wiki/Special:Random') + '&callback=?', function(data){
 				
-				var siteContents = data.contents;    
+				var siteContents = data.contents;
 				var thingt = (/<title>(.*?)<\/title>/m).exec(siteContents)[1];
 				var indexof;
 				var dash = 0;
@@ -136,9 +126,7 @@
 					indexof = thingt.indexOf("Superpower")
 					dash = 1
 				}
-
 				var abilityName;
-
 				if(dash == 0)
 				{
 					abilityName = thingt.substr(0, indexof)
@@ -147,8 +135,7 @@
 				{
 					abilityName = thingt.substr(0, indexof - 2)
 				}
-
-				//Trying to catch special characters
+				
 				if(abilityName.search("&amp;") != -1)
 				{
 					abilityName.replace("/&amp;", "&")
@@ -157,31 +144,43 @@
 				{
 					abilityName.replace("/Â", "/")
 				}
-
+				
 				abilityName = abilityName.trim()
 				url = url + abilityName.replace(/ /g, '_')
-
+				
 				document.getElementById('Stand').value = 'Stand Name: ' + Name[index] + '\n\nStand Ability: [' + abilityName + '](' + url + ') \n\nPower - ' + Stats[power] + '\n\nSpeed - ' + Stats[speed] + '\n\nRange - ' + Stats[range] + '\n\nDurability - ' + Stats[durability] + '\n\nPrecision - ' + Stats[precision] + '\n\nPotential - ' + Stats[potential];
 				});
 				
 			}			
 		</script>
-	</head>
 
-	<body>
-		This website's sole purpose is to help you create a Stand.  This website is primarily used for the "Stardust Crusaders" subreddit on reddit.com.  
-		<br />
+<link href="styles.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="header">
+	<h1><font color="#000000">Stand Generator</font></h1>
+</div>
+<div id="menu">
+	<ul>
+		<li><a href="http://www.pages.drexel.edu/~dft29/Stand_Generator/Stand-Generation-Overdrive.html">Stand Generator</a></li>
+		<li><a href="http://www.pages.drexel.edu/~dft29/Stand_Generator/Stand-Generation-Purpose.html">Purpose</a></li>
+		<li><a href="http://www.pages.drexel.edu/~dft29/Stand_Generator/Stand-Generation.html">Old version</a></li>
+	</ul>
+</div>
+<div id="content">
+	<div id="left">
 		The way this works is:
 		<ol>
 		<li>In the first textbox, enter the name of an artist and the name of one of their albums to generate a name.</li>
 		<li>Click the button titled "Generate Name" to generate the name of your stand.</li>
 		<li>The second textbox is there for you to check if the name is correct.  <b>You cannot skip this process.</b></li>
 		<li>Click the button called "Generate Stand" to generate the Stand's name, ability, and stats in a format suited for the reddit comment box.</li>
-		<li>It may take up to 7 seconds for information to appear.  Press the button again if it isnt showing up soon.</li>
+		<li>If a lot of people are trying to use the site, it may take a few seconds to load your stand.</li>
 		</ol>
 		Stats rank from A to E; A being the best and E being the worst.
 		<br />
-		If you are having difficulties with this page, <a href="http://www.pages.drexel.edu/~dft29/Stand_Generator/Stand-Generation.html">visit an older version of this page</a>
+		<br />
+		My Twitter: @dio-volo
 		<br />
 		<br /> 
 		Enter the artist's name and the album you wish to use (e.g. Gorillaz Demon Days):<br />
@@ -194,7 +193,10 @@
 		<br />
 		<input type="button" value="Generate Name" onclick="standGeneration();" />
 		<br />
-		<br />
+		<!--In case of emergency, break comment tags-->
+		<!--<br />
+		<b>There is an issue with the connection to the power database.  Visit the old version of the site located in the navigation bar above if your stand doesn't generate in a reasonable amount of time.</b>
+		<br />-->
 		<br />
 		<input type="button" value="Generate Stand" onclick="Dio();" />
 		<br />
@@ -204,8 +206,10 @@
 		<br />
 		<br />
 		<br />
-		<p><b><font size="20">Now go forth and Stand Proud!</font></b></p>
-		<object height="90" width="150" data="Jojo - Stardust Crusaders OP Theme STAND PROUD  -  Jin Hashimoto.mp3"></object>
+		<b><font size="6.5">Now go forth and Stand Proud!</font></b>
+		<!--<object height="90" width="150" data="Jojo - Stardust Crusaders OP Theme STAND PROUD  -  Jin Hashimoto.mp3"></object>-->
 	</body>
 	<div />
-</html
+</div>
+</body>
+</html>
