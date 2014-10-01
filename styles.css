@@ -5,7 +5,6 @@ body {
 	height:100%;
 	margin: 0px;
 	padding: 0px;
-	background: #292929 url(images/back-footer.png) repeat-y center top;
 	text-align: justify;
 	font-family: Verdana, Arial, Helvetica, sans-serif;
 	font-size: 13px;
@@ -42,7 +41,7 @@ a:hover {
 	height: 120px;
 	margin: 0px auto;
 	padding: 10px 0px;
-	background: #FFFBFD url(images/header.jpg);
+	background: #FFFBFD url(header.jpg);
 	max-height:100%; 
 	max-width:100%;
 }
@@ -143,7 +142,6 @@ background-color: #CDCDCD;
 	width: 771px;
 	margin: 0px auto;
 	border-top: 1px solid #666666;
-	background: url(images/back-footer.png) repeat-y center top;
 	font-size: 9px;
 	text-align: center;
 	padding: 2px;
